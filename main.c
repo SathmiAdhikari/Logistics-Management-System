@@ -4,7 +4,7 @@
 #define MAX_CITIES 30
 void displayMenu();
 void displayCityManagement();
-
+void addCities (char cityNames[MAX_CITIES][50],int *cityCount);
 int main()
 {
     int choice01,choice02=0;
@@ -26,6 +26,7 @@ int main()
                 switch(choice02)
                 {
                 case 1:
+                    addCities(cityNames,&cityCount);
                     break;
                 case 2:
                     break;
@@ -62,4 +63,45 @@ void displayCityManagement()
     printf("2) Rename a city\n");
     printf("3) Remove a city\n");
     printf("4) Back to main menu\n");
+}
+void addCities (char cityNames[MAX_CITIES][50],int *cityCount)
+{
+    printf("\nEnter 'S' to stop\n");
+    int i=0;
+    for (i=*cityCount; i<MAX_CITIES; i++)
+    {
+        (*cityCount)++;
+        if(cityCount==MAX_CITIES)
+        {
+            printf("Maximum city limit reached.\n");
+        }
+        printf("\nEnter New City Name : ");
+        scanf(" %[^\n]", cityNames[i]);
+
+        if (strcmp(cityNames[i], "S") == 0||strcmp(cityNames[i], "s") == 0)
+        {
+            (*cityCount)--;
+            cityNames[i][0] = '\0';
+            break;
+        }
+        else
+        {
+            int j=0;
+            for(j=0; j<i; j++)
+            {
+                if (strcmp(cityNames[j], cityNames[i]) == 0)
+                {
+                    printf("Already in the system\n");
+                    i--;
+                    (*cityCount)--;
+                }
+            }
+        }
+    }
+
+    printf("\n--Updated List--");
+    for (i=0; i<*cityCount; i++)
+    {
+        printf("\n%d) %s ",i+1,cityNames[i]);
+    }
 }
