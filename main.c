@@ -7,10 +7,11 @@ void displayCityManagement();
 void addCities (char cityNames[MAX_CITIES][50],int *cityCount);
 void renameCities(char cityNames[MAX_CITIES][50],int cityCount);
 void removeCities(char cityNames[MAX_CITIES][50],int *cityCount);
+void displayDistanceManagement();
 
 int main()
 {
-    int choice01,choice02=0;
+    int choice01,choice02,choice03=0;
     char cityNames[MAX_CITIES][50]= {"Colombo","Kandy","Galle","Jaffna"};
     int cityCount=4;
     do
@@ -45,6 +46,26 @@ int main()
                 }
             }
             while(choice02!=4);
+        case 2:
+            do
+            {
+                displayDistanceManagement();
+                printf("\nEnter your choice : ");
+                scanf("%d",&choice03);
+                switch(choice03)
+                {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                default:
+                    printf("\nInvalid choice!\n");
+                    break;
+                }
+            }
+            while(choice03!=3);
         }
     }
     while (choice01!=6);
@@ -174,4 +195,11 @@ void removeCities(char cityNames[MAX_CITIES][50],int *cityCount)
             printf("\n%d) %s ",i+1,cityNames[i]);
         }
     }
+}
+void displayDistanceManagement()
+{
+    printf("\n\n---Distance Management---\n");
+    printf("1) Enter Distance between cities\n");
+    printf("2) Display distance table\n");
+    printf("3) Back to main menu\n");
 }
