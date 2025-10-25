@@ -8,12 +8,13 @@ void addCities (char cityNames[MAX_CITIES][50],int *cityCount);
 void renameCities(char cityNames[MAX_CITIES][50],int cityCount);
 void removeCities(char cityNames[MAX_CITIES][50],int *cityCount);
 void displayDistanceManagement();
-
+void initializeDistanceArray(int distance[MAX_CITIES][MAX_CITIES]);
 int main()
 {
     int choice01,choice02,choice03=0;
     char cityNames[MAX_CITIES][50]= {"Colombo","Kandy","Galle","Jaffna"};
     int cityCount=4;
+    int distance[MAX_CITIES][MAX_CITIES];
     do
     {
         displayMenu();
@@ -48,7 +49,7 @@ int main()
             while(choice02!=4);
         case 2:
             do
-            {
+            {   initializeDistanceArray(distance);
                 displayDistanceManagement();
                 printf("\nEnter your choice : ");
                 scanf("%d",&choice03);
@@ -202,4 +203,22 @@ void displayDistanceManagement()
     printf("1) Enter Distance between cities\n");
     printf("2) Display distance table\n");
     printf("3) Back to main menu\n");
+}
+void initializeDistanceArray(int distance[MAX_CITIES][MAX_CITIES])
+{
+    int i,j=0;
+    for(i=0;i<MAX_CITIES;i++)
+    {
+        for(j=0; j<MAX_CITIES; j++)
+        {
+            if(i==j)
+            {
+                distance[i][j] = 0;
+            }
+            else
+            {
+                distance[i][j] = -1;
+            }
+        }
+    }
 }
