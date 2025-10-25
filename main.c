@@ -5,6 +5,9 @@
 void displayMenu();
 void displayCityManagement();
 void addCities (char cityNames[MAX_CITIES][50],int *cityCount);
+void renameCities(char cityNames[MAX_CITIES][50],int cityCount);
+void removeCities(char cityNames[MAX_CITIES][50],int *cityCount);
+
 int main()
 {
     int choice01,choice02=0;
@@ -29,12 +32,15 @@ int main()
                     addCities(cityNames,&cityCount);
                     break;
                 case 2:
+                    renameCities(cityNames,cityCount);
                     break;
                 case 3:
+                    removeCities(cityNames,&cityCount);
                     break;
                 case 4:
                     break;
                 default:
+                    printf("\nInvalid choice!\n");
                     break;
                 }
             }
@@ -103,5 +109,69 @@ void addCities (char cityNames[MAX_CITIES][50],int *cityCount)
     for (i=0; i<*cityCount; i++)
     {
         printf("\n%d) %s ",i+1,cityNames[i]);
+    }
+}
+void renameCities(char cityNames[MAX_CITIES][50],int cityCount)
+{
+    char newName[50];
+    int i=0;
+    for (i=0; i<cityCount; i++)
+    {
+        printf("\n%d) %s ",i+1,cityNames[i]);
+    }
+    int index;
+    printf("\nEnter city index to rename: ");
+    scanf("%d", &index);
+    if(index<1 || index > cityCount)
+    {
+        printf("Invalid index\n");
+    }
+    else
+    {
+        printf("\nEnter the new city name : ");
+        scanf(" %[^\n]",newName);
+        strcpy(cityNames[index-1],newName);
+        printf("City renamed successfully!\n");
+    }
+    printf("\n----Updated List---");
+    for (i=0; i<cityCount; i++)
+    {
+        printf("\n%d) %s ",i+1,cityNames[i]);
+    }
+
+    return;
+
+}
+void removeCities(char cityNames[MAX_CITIES][50],int *cityCount)
+{
+    printf("\n----City List---");
+    int i;
+    for (i=0; i<*cityCount; i++)
+    {
+        printf("\n%d) %s ",i+1,cityNames[i]);
+    }
+
+    int removeCityId;
+    printf("\nEnter city index to remove: ");
+    scanf("%d",&removeCityId);
+
+    if(removeCityId<1 || removeCityId > cityCount)
+    {
+        printf("Invalid index\n");
+        return;
+    }
+    if (removeCityId<*cityCount)
+    {
+        for(int i = removeCityId-1; i<*cityCount-1; i++)
+        {
+            strcpy(cityNames[i], cityNames[i + 1]);
+        }
+        printf("City removed successfully!\n");
+        (*cityCount)--;
+        printf("\n----Updated List---");
+        for (i=0; i<*cityCount; i++)
+        {
+            printf("\n%d) %s ",i+1,cityNames[i]);
+        }
     }
 }
