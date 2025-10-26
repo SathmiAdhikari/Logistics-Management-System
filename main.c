@@ -114,6 +114,11 @@ int main()
         case 5:
            showReports();
            break;
+        case 6:
+            printf("\nExiting the program....\n");
+            break;
+        default:
+            printf("Invalid number\n");
         }
     }
     while (choice01!=6);
@@ -128,8 +133,8 @@ void displayMenu ()
     printf("2) Distance Management\n");
     printf("3) Delivery Request\n");
     printf("4) Find Least Cost Route\n");
-    printf("5. Reports\n");
-    printf("6. Exit\n");
+    printf("5) Reports\n");
+    printf("6) Exit\n");
 }
 void displayCityManagement()
 {
@@ -438,6 +443,12 @@ void calculateDeliveryCost(int source, int destination, int weight, int distance
     float operationalCost = deliveryCost+fuelCost;
     float profit = deliveryCost*0.25;
     float customerCharge = operationalCost+profit;
+
+    totalDeliveries++;
+    totalDistanceCovered += D;
+    totalDeliveryTime += deliveryTime;
+    totalRevenue += customerCharge;
+    totalProfit += profit;
 
     displayDeliverySummary(cityNames[source-1], cityNames[destination-1], D, weight,
                            vehicleNames[vehicleType], deliveryCost, deliveryTime,
