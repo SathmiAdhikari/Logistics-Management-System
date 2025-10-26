@@ -3,6 +3,7 @@
 #include <string.h>
 #define MAX_CITIES 30
 #define FUEL_PRICE 310
+#include <limits.h>
 void displayMenu();
 void displayCityManagement();
 void addCities (char cityNames[MAX_CITIES][50],int *cityCount);
@@ -27,6 +28,7 @@ void printDeliveryOder(char cityNames[MAX_CITIES][50], int *cityCount,
                        int distance[MAX_CITIES][MAX_CITIES],
                        char vehicleNames[3][10], int vehicleCapacity[3],
                        int vehicleRate[3], int vehicleSpeed[3], int vehicleEfficiency[3]);
+void findLeastCostRoute(char cityNames[MAX_CITIES][50], int *cityCount,int distance[MAX_CITIES][MAX_CITIES]);
 
 int main()
 {
@@ -98,7 +100,9 @@ int main()
         case 3:
             printDeliveryOder(cityNames, &cityCount, distance, vehicleNames,
                               vehicleCapacity, vehicleRate, vehicleSpeed, vehicleEfficiency);
-
+            break;
+        case 4:
+             findLeastCostRoute(cityNames,&cityCount,distance);
             break;
         }
     }
@@ -469,4 +473,86 @@ void printDeliveryOder(char cityNames[MAX_CITIES][50], int *cityCount,
                           cityNames, distance, vehicleNames, vehicleRate,
                           vehicleSpeed, vehicleEfficiency, vehicleType);
 
+}
+void findLeastCostRoute(char cityNames[MAX_CITIES][50], int *cityCount,int distance[MAX_CITIES][MAX_CITIES])
+{   int hasEmpty = 0;
+    for (int i = 0; i < cityCount; i++) {
+        for (int j = 0; j < cityCount; j++) {
+            if (i != j && distance[i][j] == -1) {
+                hasEmpty = 1;
+                break;
+            }
+        }
+        if (hasEmpty) break;
+    }
+
+    if (hasEmpty) {
+        printf("\nPlease add all distance values before finding the least-cost route!\n");
+        return;
+    }
+
+    int start, end;
+    printf("\n----City List----");
+    for (int i = 0; i < cityCount; i++) {
+        printf("\n%d) %s", i + 1, cityNames[i]);
+    }
+
+    printf("\nEnter source city: ");
+    scanf("%d", &start);
+    printf("Enter destination city: ");
+    scanf("%d", &end);
+
+    if (start < 1 || end < 1 || start > cityCount || end > cityCount || start == end) {
+        printf("\nInvalid input.\n");
+        return;
+    }
+
+    int cities[*cityCount - 2], c = 0;
+    for (int i = 0; i < cityCount; i++) {
+        if (i != start - 1 && i != end - 1)
+            cities[c++] = i;
+    }
+
+    int minDist = INT_MAX;
+    int bestPath[*cityCount];
+    int perm[c];
+    for (int i = 0; i < c; i++) perm[i] = i;
+
+    int done = 0;
+    while (!done) {
+        int total = 0, prev = start - 1;
+        for (int i = 0; i < c; i++) {
+            int next = cities[perm[i]];
+            total += distance[prev][next];
+            prev = next;
+        }
+        total += distance[prev][end - 1];
+
+        if (total < minDist) {
+            minDist = total;
+            bestPath[0] = start - 1;
+            for (int i = 0; i < c; i++) bestPath[i + 1] = cities[perm[i]];
+            bestPath[c + 1] = end - 1;
+        }
+
+        int i = c - 2;
+        while (i >= 0 && perm[i] > perm[i + 1]) i--;
+        if (i < 0)
+            done = 1;
+        else {
+            int j = c - 1;
+            while (perm[j] < perm[i]) j--;
+            int t = perm[i]; perm[i] = perm[j]; perm[j] = t;
+            for (int a = i + 1, b = c - 1; a < b; a++, b--) {
+                t = perm[a]; perm[a] = perm[b]; perm[b] = t;
+            }
+        }
+    }
+
+    printf("\nLeast Cost Route: ");
+    for (int i = 0; i < c + 2; i++) {
+        printf("%s", cityNames[bestPath[i]]);
+        if (i < c + 1) printf(" -> ");
+    }
+    printf("\nTotal Distance: %d km\n", minDist);
 }
