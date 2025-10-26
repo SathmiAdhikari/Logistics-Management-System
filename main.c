@@ -29,7 +29,14 @@ void printDeliveryOder(char cityNames[MAX_CITIES][50], int *cityCount,
                        char vehicleNames[3][10], int vehicleCapacity[3],
                        int vehicleRate[3], int vehicleSpeed[3], int vehicleEfficiency[3]);
 void findLeastCostRoute(char cityNames[MAX_CITIES][50], int *cityCount,int distance[MAX_CITIES][MAX_CITIES]);
-
+void showReports();
+int totalDeliveries = 0;
+float totalDistanceCovered = 0;
+float totalDeliveryTime = 0;
+float totalRevenue = 0;
+float totalProfit = 0;
+float longestRoute = 0;
+float shortestRoute = 0;
 int main()
 {
     int choice01,choice02,choice03=0;
@@ -104,6 +111,9 @@ int main()
         case 4:
              findLeastCostRoute(cityNames,&cityCount,distance);
             break;
+        case 5:
+           showReports();
+           break;
         }
     }
     while (choice01!=6);
@@ -555,4 +565,31 @@ void findLeastCostRoute(char cityNames[MAX_CITIES][50], int *cityCount,int dista
         if (i < c + 1) printf(" -> ");
     }
     printf("\nTotal Distance: %d km\n", minDist);
+}
+void showReports()
+ {
+    printf("\n----------- Performance Reports -----------\n");
+    printf("Total Deliveries Completed : %d\n",totalDeliveries);
+    printf("Total Distance Covered     : %.2f km\n",totalDistanceCovered);
+    if (totalDeliveries >0)
+       {
+         printf("Average Delivery Time      : %.2f hours\n",totalDeliveryTime/totalDeliveries);
+       }
+    else
+        {
+            printf("Average Delivery Time      : 0.00 hours\n");
+        }
+    printf("Total Revenue              : %.2f LKR\n",totalRevenue);
+    printf("Total Profit               : %.2f LKR\n",totalProfit);
+
+    if (totalDeliveries > 0)
+    {
+        printf("Longest Route Completed    : %.2f km\n", longestRoute);
+        printf("Shortest Route Completed   : %.2f km\n", shortestRoute);
+    } else
+    {
+        printf("Longest Route Completed    : 0 km\n");
+        printf("Shortest Route Completed   : 0 km\n");
+    }
+    printf("-------------------------------------------\n");
 }
