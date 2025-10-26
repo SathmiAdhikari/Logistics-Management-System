@@ -9,6 +9,8 @@ void renameCities(char cityNames[MAX_CITIES][50],int cityCount);
 void removeCities(char cityNames[MAX_CITIES][50],int *cityCount);
 void displayDistanceManagement();
 void initializeDistanceArray(int distance[MAX_CITIES][MAX_CITIES]);
+void enterDistance(char cityNames[MAX_CITIES][50],int *cityCount,int distance[MAX_CITIES][MAX_CITIES]);
+
 int main()
 {
     int choice01,choice02,choice03=0;
@@ -56,6 +58,7 @@ int main()
                 switch(choice03)
                 {
                 case 1:
+                     enterDistance(cityNames,&cityCount,distance);
                     break;
                 case 2:
                     break;
@@ -221,4 +224,48 @@ void initializeDistanceArray(int distance[MAX_CITIES][MAX_CITIES])
             }
         }
     }
+}
+void enterDistance(char cityNames[MAX_CITIES][50],int *cityCount,int distance[MAX_CITIES][MAX_CITIES])
+{
+    int i,j=0;
+    printf("\nAvailable Cities:\n");
+    for (i=0; i<*cityCount; i++)
+    {
+        printf("\n%d) %s ",i+1,cityNames[i]);
+    }
+
+    int cityIndex01,cityIndex02,distanceBetween;
+    printf("\nEnter first city: ");
+    scanf("%d",&cityIndex01);
+    printf("Enter second city: ");
+    scanf("%d",&cityIndex02);
+    printf("Distance between them in km :");
+    scanf("%d",&distanceBetween);
+
+    if(cityIndex01 < 1 || cityIndex01 > *cityCount ||
+            cityIndex02 < 1 || cityIndex02 > *cityCount)
+    {
+        printf("Invalid city numbers\n");
+        return;
+    }
+
+    if(distanceBetween<0)
+    {
+        printf("Distance cannot be negative\n");
+        return;
+    }
+    if(distanceBetween == 0)
+    {
+        printf("Distance cannot be zero for different cities\n");
+        return;
+    }
+
+    int idx1 = cityIndex01 - 1;
+    int idx2 = cityIndex02 - 1;
+
+    distance[idx1][idx2] = distanceBetween;
+    distance[idx2][idx1] = distanceBetween;
+
+    printf("\nDistance between %s and %s set to %d km\n",cityNames[idx1],cityNames[idx2],distanceBetween);
+
 }
