@@ -11,7 +11,8 @@ void displayDistanceManagement();
 void initializeDistanceArray(int distance[MAX_CITIES][MAX_CITIES]);
 void enterDistance(char cityNames[MAX_CITIES][50],int *cityCount,int distance[MAX_CITIES][MAX_CITIES]);
 void distanceTable(char cityNames[MAX_CITIES][50],int *cityCount,int distance[MAX_CITIES][MAX_CITIES]);
-
+void displayVehicleOptions(char vehicleNames[3][10],int vehicleCapacity[3],
+                           int vehicleRate[3], int vehicleSpeed[3],  int vehicleEfficiency[3]);
 int main()
 {
     int choice01,choice02,choice03=0;
@@ -73,6 +74,9 @@ int main()
                 }
             }
             while(choice03!=3);
+            break;
+        case 3:
+            break;
         }
     }
     while (choice01!=6);
@@ -305,5 +309,25 @@ void distanceTable(char cityNames[MAX_CITIES][50],int *cityCount,int distance[MA
             }
         }
         printf("\n");
+    }
+}
+void displayVehicleOptions(char vehicleNames[3][10],int vehicleCapacity[3],
+                           int vehicleRate[3], int vehicleSpeed[3],  int vehicleEfficiency[3])
+
+
+{
+    printf("\n--------------------------------Vehicle Types----------------------------\n");
+    printf("| Type     | Capacity   | Rate per km   | Avg Speed   | Fuel Efficiency   |\n");
+    printf("---------------------------------------------------------------------------\n");
+    printf("|          | (kg)       | (LKR)         | (km/h)      | (km/l)            |\n");
+
+    for(int i = 0; i < 3; i++)
+    {
+        printf("|%d) %-6s | %-10d | %-13d | %-11d | %-17d |\n",i+1,
+               vehicleNames[i],
+               vehicleCapacity[i],
+               vehicleRate[i],
+               vehicleSpeed[i],
+               vehicleEfficiency[i]);
     }
 }
