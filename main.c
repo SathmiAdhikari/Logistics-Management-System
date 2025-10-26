@@ -20,6 +20,10 @@ int main()
     char cityNames[MAX_CITIES][50]= {"Colombo","Kandy","Galle","Jaffna"};
     int cityCount=4;
     int distance[MAX_CITIES][MAX_CITIES];
+    int vehicleCapacity[3]= {1000,5000,10000};
+    int vehicleRate[3]= {30,40,80};
+    int vehicleSpeed[3]= {60,50,45};
+    int vehicleEfficiency[3]= {12,6,4};
     do
     {
         displayMenu();
