@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define MAX_CITIES 30
+#define FUEL_PRICE 310
 void displayMenu();
 void displayCityManagement();
 void addCities (char cityNames[MAX_CITIES][50],int *cityCount);
@@ -18,6 +19,14 @@ void displayDeliverySummary(char *source, char *destination, int distanceBetween
                             char *vehicleNames, float deliveryCost, float deliveryTime,
                             float fuelUsed, float fuelCost, float operationalCost,
                             float profit, float customerCharge);
+void calculateDeliveryCost(int source, int destination, int weight, int distanceBetween,
+                           char cityNames[MAX_CITIES][50], int distance[MAX_CITIES][MAX_CITIES],
+                           char vehicleNames[3][10], int vehicleRate[3], int vehicleSpeed[3],
+                           int vehicleEfficiency[3], int vehicleType);
+void printDeliveryOder(char cityNames[MAX_CITIES][50], int *cityCount,
+                       int distance[MAX_CITIES][MAX_CITIES],
+                       char vehicleNames[3][10], int vehicleCapacity[3],
+                       int vehicleRate[3], int vehicleSpeed[3], int vehicleEfficiency[3]);
 
 int main()
 {
@@ -25,6 +34,8 @@ int main()
     char cityNames[MAX_CITIES][50]= {"Colombo","Kandy","Galle","Jaffna"};
     int cityCount=4;
     int distance[MAX_CITIES][MAX_CITIES];
+    initializeDistanceArray(distance);
+    char vehicleNames[3][10]={"Van","Truck","Lorry"};
     int vehicleCapacity[3]= {1000,5000,10000};
     int vehicleRate[3]= {30,40,80};
     int vehicleSpeed[3]= {60,50,45};
@@ -64,7 +75,6 @@ int main()
         case 2:
             do
             {
-                initializeDistanceArray(distance);
                 displayDistanceManagement();
                 printf("\nEnter your choice : ");
                 scanf("%d",&choice03);
@@ -86,6 +96,9 @@ int main()
             while(choice03!=3);
             break;
         case 3:
+            printDeliveryOder(cityNames, &cityCount, distance, vehicleNames,
+                              vehicleCapacity, vehicleRate, vehicleSpeed, vehicleEfficiency);
+
             break;
         }
     }
@@ -306,7 +319,7 @@ void distanceTable(char cityNames[MAX_CITIES][50],int *cityCount,int distance[MA
 
     for(i=0; i<*cityCount; i++)
     {
-        printf("%d) %-8s",i+1,cityNames[i]);
+        printf("%d) %-10s",i+1,cityNames[i]);
         for(j=0; j<*cityCount; j++)
         {
             if(distance[i][j] == -1)
@@ -385,4 +398,75 @@ void displayDeliverySummary(char *source, char *destination, int distanceBetween
     printf("Customer Charge   : %.2f LKR\n", customerCharge);
     printf("Estimated Time    : %.2f hours\n", deliveryTime);
     printf("------------------------------------------------------------\n");
+}
+void calculateDeliveryCost(int source, int destination, int weight, int distanceBetween,
+                           char cityNames[MAX_CITIES][50], int distance[MAX_CITIES][MAX_CITIES],
+                           char vehicleNames[3][10], int vehicleRate[3], int vehicleSpeed[3],
+                           int vehicleEfficiency[3], int vehicleType)
+{
+    int D = distance[source-1][destination-1];
+
+    if(D == -1)
+    {
+        printf("No route available between %s and %s\n",cityNames[source-1],cityNames[destination-1]);
+        return;
+    }
+    int R = vehicleRate[vehicleType];
+    int S = vehicleSpeed[vehicleType];
+    int E = vehicleEfficiency[vehicleType];
+    int F = FUEL_PRICE;
+
+    float W = (float)weight;
+    float deliveryCost = D*R*(1+ W/10000.0);
+    float deliveryTime = (float)D/S;
+    float fuelUsed = (float)D/E;
+    float fuelCost = fuelUsed*F;
+    float operationalCost = deliveryCost+fuelCost;
+    float profit = deliveryCost*0.25;
+    float customerCharge = operationalCost+profit;
+
+    displayDeliverySummary(cityNames[source-1], cityNames[destination-1], D, weight,
+                           vehicleNames[vehicleType], deliveryCost, deliveryTime,
+                           fuelUsed, fuelCost, operationalCost, profit, customerCharge);
+}
+void printDeliveryOder(char cityNames[MAX_CITIES][50], int *cityCount,
+                       int distance[MAX_CITIES][MAX_CITIES],
+                       char vehicleNames[3][10], int vehicleCapacity[3],
+                       int vehicleRate[3], int vehicleSpeed[3], int vehicleEfficiency[3])
+
+{
+    int source, destination, weight;
+    printf("\n----City List---");
+    int i;
+    for (i=0; i<*cityCount; i++)
+    {
+        printf("\n%d) %s ",i+1,cityNames[i]);
+    }
+    printf("\nEnter source city: ");
+    scanf("%d",&source);
+    printf("Enter destination city: ");
+    scanf("%d",&destination);
+
+    if(source == destination)
+    {
+        printf("Source and destination cannot be the same\n");
+        return;
+    }
+    printf("Enter package weight (kg): ");
+    scanf("%d",&weight);
+
+    if(weight<=0)
+    {
+        printf("Weight should be a positive number\n");
+        return;
+    }
+
+    displayVehicleOptions(vehicleNames, vehicleCapacity, vehicleRate, vehicleSpeed, vehicleEfficiency);
+
+    int vehicleType = selectVehicleType(vehicleNames, vehicleCapacity, weight);
+
+    calculateDeliveryCost(source, destination, weight, distance[source-1][destination-1],
+                          cityNames, distance, vehicleNames, vehicleRate,
+                          vehicleSpeed, vehicleEfficiency, vehicleType);
+
 }
