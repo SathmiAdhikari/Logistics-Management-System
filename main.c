@@ -13,6 +13,7 @@ void enterDistance(char cityNames[MAX_CITIES][50],int *cityCount,int distance[MA
 void distanceTable(char cityNames[MAX_CITIES][50],int *cityCount,int distance[MAX_CITIES][MAX_CITIES]);
 void displayVehicleOptions(char vehicleNames[3][10],int vehicleCapacity[3],
                            int vehicleRate[3], int vehicleSpeed[3],  int vehicleEfficiency[3]);
+int selectVehicleType(char vehicleNames[3][10],int vehicleCapacity[3],int weight);
 int main()
 {
     int choice01,choice02,choice03=0;
@@ -314,7 +315,6 @@ void distanceTable(char cityNames[MAX_CITIES][50],int *cityCount,int distance[MA
 void displayVehicleOptions(char vehicleNames[3][10],int vehicleCapacity[3],
                            int vehicleRate[3], int vehicleSpeed[3],  int vehicleEfficiency[3])
 
-
 {
     printf("\n--------------------------------Vehicle Types----------------------------\n");
     printf("| Type     | Capacity   | Rate per km   | Avg Speed   | Fuel Efficiency   |\n");
@@ -330,4 +330,27 @@ void displayVehicleOptions(char vehicleNames[3][10],int vehicleCapacity[3],
                vehicleSpeed[i],
                vehicleEfficiency[i]);
     }
+}
+int selectVehicleType(char vehicleNames[3][10],int vehicleCapacity[3],int weight)
+{
+    int choice;
+    do
+    {
+        printf("\nSelect vehicle type:");
+        scanf("%d",&choice);
+
+        while(choice < 1 || choice > 3)
+        {
+            printf("Invalid choice! Please enter 1, 2, or 3: ");
+            scanf("%d",&choice);
+        }
+
+        if(vehicleCapacity[choice-1]<weight)
+        {
+            printf("Weight exceed vehicle capacity,Choose another vehicle\n");
+        }
+    }
+    while(vehicleCapacity[choice-1]<weight);
+    printf("Vehicle   : %s\n",vehicleNames[choice-1]);
+    return choice-1;
 }
